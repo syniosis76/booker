@@ -22,6 +22,8 @@ from kivy.app import App
 class MainApp(App):
     kv_directory = 'templates'
 
+    def buttonClick(self, instance):
+        print('The button <%s> is being pressed' % instance.text)
 
 if __name__ == '__main__':
     MainApp().run()
