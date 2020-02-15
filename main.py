@@ -17,6 +17,8 @@ import kivy
 kivy.require('1.0.7')
 
 from kivy.app import App
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
 
 
 class MainApp(App):
@@ -24,6 +26,10 @@ class MainApp(App):
 
     def buttonClick(self, instance):
         print('The button <%s> is being pressed' % instance.text)
+        popup = Popup(title='Test popup',
+            content=Label(text='Hello world from ' + instance.text),
+            size_hint=(None, None), size=(400, 400))
+        popup.open()         
 
 if __name__ == '__main__':
     MainApp().run()
