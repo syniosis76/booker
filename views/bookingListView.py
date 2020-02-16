@@ -31,12 +31,21 @@ class BookingListView(Screen):
         for timeslot in app.data.timeslots:
             self.bookings.add_widget(Label(text=timeslot.time))
             for product in app.data.products:
-                button = Button(text='')
+                person = app.data.getBooking(product, timeslot)
+                button = Button()
+                button.booker_product = product
+                button.booker_timeslot = timeslot
+                if person:
+                    button.text = person.name
                 button.bind(on_press=self.buttonClick)
                 self.bookings.add_widget(button)
 
     def buttonClick(self, instance):
         print('Booking button <%s> clicked.' % instance.text)
+        app = App.get_running_app()
+        app.data.currentProduct = instance.booker_product
+        app.data.currentTimeslot = instance.booker_timeslot
+
         self.manager.transition.direction = 'left'
         self.manager.current = 'people'
     

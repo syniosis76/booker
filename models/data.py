@@ -1,7 +1,7 @@
 from models.product import Product
 from models.person import Person
 from models.timeslot import Timeslot
-from models.cell import Cell
+from models.booking import Booking
 
 class Data():    
     def __init__(self):
@@ -14,8 +14,11 @@ class Data():
         self.timeslots = []
         self.loadTimeslots()
 
-        self.cells = []
-        self.loadCells()
+        self.bookings = []
+        self.loadBookings()
+
+        self.currentTimeslot = None
+        self.currentProduct = None
 
     def loadProducts(self):
         product = Product()
@@ -62,13 +65,29 @@ class Data():
         timeslot.time = '09:00'
         self.timeslots.append(timeslot)
 
-    def loadCells(self):
-        self.cells.clear()
+    def loadBookings(self):
+        self.bookings.clear()
 
-        for timeslot in self.timeslots:
-          row = []
-          for product in self.products:
-            cell = Cell()
-            row.append(cell)
+        booking = Booking()
+        booking.product = 'Hitman S'
+        booking.timeslot = '08:00'
+        booking.email_address = 'anna@verner.co.nz'
+        self.bookings.append(booking)
 
-          self.cells.append(row)
+    def getBooking(self, product, timeslot):
+        booking = next((booking for booking in self.bookings if booking.product == product.name and booking.timeslot == timeslot.time), None)
+        if booking:
+          return next((person for person in self.people if person.email_address == booking.email_address), None)
+
+        return None
+
+    def setBooking(self, product, timeslot, person):
+        booking = next((booking for booking in self.bookings if booking.product == product.name and booking.timeslot == timeslot.time), None)
+        if booking:
+            del(self.bookings, booking)
+
+        booking = Booking()
+        booking.product = product
+        booking.timeslot = timeslot
+        booking.email_address = person.email_address
+        self.bookings.append(booking)

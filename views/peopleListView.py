@@ -17,18 +17,19 @@ class PeopleListView(Screen):
         self.listPeople()
 
     def listPeople(self):
-        self.people = self.ids.people
+        self.people = self.ids.people  
         self.people.clear_widgets()
 
         app = App.get_running_app()
 
-        for person in app.data.people:
+        sortedPeople = sorted(app.data.people, key=lambda person: person.name)
+        for person in sortedPeople:
             button = Button(text=person.name)
             button.bind(on_press=self.buttonClick)
             self.people.add_widget(button)
 
     def buttonClick(self, instance):
-        print('People button <%s> clicked.' % instance.text)
+        print('People button <%s> clicked.' % instance.text)        
         self.manager.transition.direction = 'right'
         self.manager.current = 'bookings'
     
