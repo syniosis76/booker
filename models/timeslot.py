@@ -1,0 +1,2 @@
+class Timeslot():
+  time: None
