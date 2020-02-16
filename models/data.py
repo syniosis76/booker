@@ -75,19 +75,19 @@ class Data():
         self.bookings.append(booking)
 
     def getBooking(self, product, timeslot):
-        booking = next((booking for booking in self.bookings if booking.product == product.name and booking.timeslot == timeslot.time), None)
+        booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
         if booking:
           return next((person for person in self.people if person.email_address == booking.email_address), None)
 
         return None
 
-    def setBooking(self, product, timeslot, person):
-        booking = next((booking for booking in self.bookings if booking.product == product.name and booking.timeslot == timeslot.time), None)
+    def setBooking(self, product, timeslot, email_address):
+        booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
         if booking:
             del(self.bookings, booking)
 
         booking = Booking()
         booking.product = product
         booking.timeslot = timeslot
-        booking.email_address = person.email_address
+        booking.email_address = email_address
         self.bookings.append(booking)

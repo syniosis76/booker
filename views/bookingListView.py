@@ -8,18 +8,16 @@ from kivy.uix.button import Button
 Builder.load_file('views/bookingListView.kv')
 
 class BookingListView(Screen):
-    def __init__(self, **kwargs):
-        super(BookingListView, self).__init__(**kwargs)
-        Clock.schedule_once(lambda dt: self.prepare(), 0)        
+    def __init__(self, **kwargs):        
+        super(BookingListView, self).__init__(**kwargs)           
+        self.buildUi()
 
-    def prepare(self):
-        print('Preparing BookingListView...')
+    def on_pre_enter(self):        
+        self.listBookings()   
 
-        self.listBookings()
-
-    def listBookings(self):
+    def buildUi(self):
         self.bookings = self.ids.bookings
-        self.bookings.clear_widgets()
+        self.bookings.clear_widgets()        
 
         app = App.get_running_app()
 
@@ -30,15 +28,24 @@ class BookingListView(Screen):
 
         for timeslot in app.data.timeslots:
             self.bookings.add_widget(Label(text=timeslot.time))
-            for product in app.data.products:
-                person = app.data.getBooking(product, timeslot)
+            for product in app.data.products:                
                 button = Button()
-                button.booker_product = product
-                button.booker_timeslot = timeslot
-                if person:
-                    button.text = person.name
+                button.booker_product = product.name
+                button.booker_timeslot = timeslot.time                
                 button.bind(on_press=self.buttonClick)
                 self.bookings.add_widget(button)
+
+    def listBookings(self):
+        app = App.get_running_app()
+
+        self.bookings = self.ids.bookings
+        for widget in self.bookings.children:
+            if isinstance(widget, Button):
+                person = app.data.getBooking(widget.booker_product, widget.booker_timeslot)
+                if person:
+                    widget.text = person.name
+                else:
+                    widget.text = ''
 
     def buttonClick(self, instance):
         print('Booking button <%s> clicked.' % instance.text)
