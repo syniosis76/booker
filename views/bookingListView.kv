@@ -2,5 +2,14 @@
 
 <BookingListView>:
 	GridLayout:
-		cols: 1	
-		id: bookings
+		cols: 1
+		GridLayout:
+			cols: 3
+			Label:
+				text: 'Booker'
+			Button:
+				text: 'Products'
+				on_press: root.productsButtonClick(self)
+		GridLayout:
+			cols: 1	
+			id: bookings

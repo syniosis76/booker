@@ -1,0 +1,17 @@
+#:kivy 1.0
+
+<ProductView>:
+	GridLayout:
+		cols: 1	
+		Label:
+			text: 'Enter a list of your demo products.'
+		TextInput:
+			id: productsInput
+		GridLayout:
+			cols: 2
+			Button:
+				text: 'OK'
+				on_press: root.okButtonClick(self)
+			Button:
+				text: 'Cancel'
+				on_press: root.cancelButtonClick(self)

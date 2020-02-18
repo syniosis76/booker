@@ -8,6 +8,7 @@ from models.data import Data
 
 from views.bookingListView import BookingListView
 from views.peopleListView import PeopleListView
+from views.productView import ProductView
 
 class BookerApp(App):    
     def build(self):
@@ -16,6 +17,7 @@ class BookerApp(App):
         self.screenManager = ScreenManager()
         self.screenManager.add_widget(BookingListView(name='bookings'))
         self.screenManager.add_widget(PeopleListView(name='people')) 
+        self.screenManager.add_widget(ProductView(name='products')) 
 
         return self.screenManager
 

@@ -1,7 +1,6 @@
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 
@@ -9,11 +8,15 @@ Builder.load_file('views/bookingListView.kv')
 
 class BookingListView(Screen):
     def __init__(self, **kwargs):        
-        super(BookingListView, self).__init__(**kwargs)           
-        self.buildUi()
+        super(BookingListView, self).__init__(**kwargs)                   
+        self.version = 0
 
-    def on_pre_enter(self):        
-        self.listBookings()   
+    def on_pre_enter(self):
+        app = App.get_running_app()
+        if app.data.hasUpdated(self.version):
+            self.buildUi()
+        self.listBookings()
+        self.updateVersion = app.data.version  
 
     def buildUi(self):
         self.bookings = self.ids.bookings
@@ -55,4 +58,9 @@ class BookingListView(Screen):
 
         self.manager.transition.direction = 'left'
         self.manager.current = 'people'
+    
+    def productsButtonClick(self, instance):
+        print('Booking button <%s> clicked.' % instance.text)
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'products'
     

@@ -1,7 +1,6 @@
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
 from kivy.uix.button import Button
 
 Builder.load_file('views/peopleListView.kv')
