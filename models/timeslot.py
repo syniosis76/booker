@@ -1,3 +1,5 @@
 class Timeslot():
   time: None
-  person: None
+
+  def __init__(self, time):
+    self.time = time

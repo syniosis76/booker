@@ -50,17 +50,26 @@ class Data():
         self.people.append(person)
 
     def loadTimeslots(self):
-        timeslot = Timeslot()
-        timeslot.time = '08:00'
-        self.timeslots.append(timeslot)
-
-        timeslot = Timeslot()
-        timeslot.time = '08:30'
-        self.timeslots.append(timeslot)
-
-        timeslot = Timeslot()
-        timeslot.time = '09:00'
-        self.timeslots.append(timeslot)
+        self.timeslots.clear()
+        
+        self.timeslots.append(Timeslot('08:00'))
+        self.timeslots.append(Timeslot('08:30'))
+        self.timeslots.append(Timeslot('09:00'))
+        self.timeslots.append(Timeslot('09:30'))
+        self.timeslots.append(Timeslot('10:00'))
+        self.timeslots.append(Timeslot('10:30'))
+        self.timeslots.append(Timeslot('11:00'))
+        self.timeslots.append(Timeslot('11:30'))
+        self.timeslots.append(Timeslot('12:00'))
+        self.timeslots.append(Timeslot('12:30'))
+        self.timeslots.append(Timeslot('13:00'))
+        self.timeslots.append(Timeslot('13:30'))
+        self.timeslots.append(Timeslot('14:00'))
+        self.timeslots.append(Timeslot('14:30'))
+        self.timeslots.append(Timeslot('15:00'))
+        self.timeslots.append(Timeslot('15:30'))
+        self.timeslots.append(Timeslot('16:00'))
+        self.timeslots.append(Timeslot('16:30'))
 
     def loadBookings(self):
         self.bookings.clear()
@@ -89,7 +98,7 @@ class Data():
     def setBooking(self, product, timeslot, email_address):
         booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
         if booking:
-            del(self.bookings, booking)
+            self.bookings.remove(booking)
 
         booking = Booking()
         booking.product = product

@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
 
 Builder.load_file('views/peopleListView.kv')
 
@@ -14,8 +15,8 @@ class PeopleListView(Screen):
         pass
 
     def listPeople(self):
-        self.people = self.ids.people  
-        self.people.clear_widgets()
+        people = self.ids.people  
+        people.clear_widgets()
 
         app = App.get_running_app()
 
@@ -24,14 +25,23 @@ class PeopleListView(Screen):
             button = Button()
             button.text = person.name
             button.booker_email_address = person.email_address
-            button.bind(on_press=self.buttonClick)
-            self.people.add_widget(button)
+            button.bind(on_press=self.personButtonClick)
+            button.size_hint_y = 0.07
+            people.add_widget(button)
 
-    def buttonClick(self, instance):
+        people.add_widget(FloatLayout())
+
+    def personButtonClick(self, instance):
         print('People button <%s> clicked.' % instance.text)
 
         app = App.get_running_app()
         app.data.setBooking(app.data.currentProduct, app.data.currentTimeslot, instance.booker_email_address)
+
+        self.manager.transition.direction = 'right'
+        self.manager.current = 'bookings'
+
+    def cancelButtonClick(self, instance):
+        print('People button <%s> clicked.' % instance.text)        
 
         self.manager.transition.direction = 'right'
         self.manager.current = 'bookings'

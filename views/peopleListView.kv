@@ -2,5 +2,11 @@
 
 <PeopleListView>:
 	GridLayout:
-		cols: 1	
-		id: people
+		cols: 1
+		GridLayout:
+			cols: 1	
+			id: people
+		Button:
+			text: 'Cancel'
+			size_hint_y: 0.07
+			on_press: root.cancelButtonClick(self)

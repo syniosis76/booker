@@ -6,11 +6,10 @@ Builder.load_file('views/productView.kv')
 
 class ProductView(Screen):
     def __init__(self, **kwargs):
-        super(ProductView, self).__init__(**kwargs)   
-        self.listProducts()
+        super(ProductView, self).__init__(**kwargs)           
 
     def on_pre_enter(self):
-        pass
+        self.listProducts()
 
     def listProducts(self):
         app = App.get_running_app()
