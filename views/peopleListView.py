@@ -26,7 +26,6 @@ class PeopleListView(Screen):
             button.text = person.name
             button.booker_email_address = person.email_address
             button.bind(on_press=self.personButtonClick)
-            button.size_hint_y = 0.07
             people.add_widget(button)
 
         people.add_widget(FloatLayout())

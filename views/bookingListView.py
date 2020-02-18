@@ -26,7 +26,7 @@ class BookingListView(Screen):
         app = App.get_running_app()
 
         bookings.cols = len(app.data.products) + 1
-        bookings.add_widget(Label(text='', size_hint_y=0.07))
+        bookings.add_widget(Label(text=''))
         for product in app.data.products:
             bookings.add_widget(Label(text=product.name))
 
@@ -37,7 +37,6 @@ class BookingListView(Screen):
                 button.booker_product = product.name
                 button.booker_timeslot = timeslot.time                
                 button.bind(on_press = self.buttonClick)
-                button.size_hint_y = 0.07
                 bookings.add_widget(button)
 
     def listBookings(self):
