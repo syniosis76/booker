@@ -1,6 +1,8 @@
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
@@ -16,7 +18,7 @@ class BookingListView(Screen):
         app = App.get_running_app()
         if app.data.hasUpdated(self.version):
             self.buildUi()
-        self.listBookings()
+        self.listBookings(self.ids.bookings)
         self.updateVersion = app.data.version  
 
     def buildUi(self):
@@ -25,31 +27,48 @@ class BookingListView(Screen):
 
         app = App.get_running_app()
 
-        bookings.cols = len(app.data.products) + 1
-        bookings.add_widget(Label(text=''))
+        rowHeight = 40
+        
         for product in app.data.products:
-            bookings.add_widget(Label(text=product.name))
+            grid = GridLayout()
+            grid.cols = 1                       
+            grid.add_widget(Label(text=product.name, size_hint_y=0.075))            
 
-        for timeslot in app.data.timeslots:
-            bookings.add_widget(Label(text=timeslot.time))
-            for product in app.data.products:                
+            scrollView = ScrollView()
+            scrollView.do_scroll_x = False
+
+            innerGrid = GridLayout()
+            innerGrid.cols = 1								
+            innerGrid.size_hint_y = None            
+            innerGrid.row_default_height = rowHeight
+
+            for timeslot in app.data.timeslots:                       
                 button = Button()
                 button.booker_product = product.name
-                button.booker_timeslot = timeslot.time                
-                button.bind(on_press = self.buttonClick)
-                bookings.add_widget(button)
+                button.booker_timeslot = timeslot.time
+                button.text = timeslot.time              
+                button.bind(on_press = self.buttonClick)                
+                innerGrid.add_widget(button)
 
-    def listBookings(self):
+            innerGrid.height = rowHeight * len(app.data.timeslots)
+            scrollView.add_widget(innerGrid)
+            grid.add_widget(scrollView)
+            bookings.add_widget(grid)
+
+        self.version = app.data.version          
+
+    def listBookings(self, widgets):
         app = App.get_running_app()
-
-        bookings = self.ids.bookings
-        for widget in bookings.children:
+        
+        for widget in widgets.children:
             if isinstance(widget, Button):
                 person = app.data.getBooking(widget.booker_product, widget.booker_timeslot)
                 if person:
-                    widget.text = person.name
+                    widget.text = widget.booker_timeslot + ' ' + person.name
                 else:
-                    widget.text = ''
+                    widget.text = widget.booker_timeslot
+            else:
+                self.listBookings(widget)
 
     def buttonClick(self, instance):
         print('Booking button <%s> clicked.' % instance.text)

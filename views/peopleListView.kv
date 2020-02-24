@@ -4,10 +4,15 @@
 	GridLayout:
 		cols: 1
 		row_default_height: 40
-		GridLayout:
-			cols: 1
-			row_default_height: 40
-			id: people
+		ScrollView:
+			do_scroll_x: False
+			GridLayout:
+				cols: 1
+				size_hint_y: None
+				height: self.minimum_height
+				row_default_height: 40
+				row_force_default: True
+				id: people
 		Button:
 			text: 'Cancel'
 			size_hint_y: 0.07
