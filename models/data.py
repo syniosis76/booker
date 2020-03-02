@@ -7,144 +7,149 @@ import os.path
 import pickle
 
 class Data():    
-    def __init__(self):
-        self.filename = 'data.data'
+  def __init__(self):
+    self.filename = 'data.data'
 
-        self.products = []
-        self.people = []
-        self.timeslots = []
-        self.bookings = []
-        
-        self.version = 0
-        self.currentTimeslot = None
-        self.currentProduct = None 
+    self.products = []
+    self.people = []
+    self.timeslots = []
+    self.bookings = []
+    
+    self.version = 0
+    self.currentTimeslot = None
+    self.currentProduct = None 
 
-        self.loadData()     
+    self.loadData()     
 
-    def loadData(self):
-        self.load()                    
-        self.defaultProducts()
-        self.defaultPeople()            
-        self.defaultTimeslots()
-        self.defaultBookings()    
+  def loadData(self):
+    self.load()                    
+    self.defaultProducts()
+    self.defaultPeople()            
+    self.defaultTimeslots()
+    self.defaultBookings()    
 
-        self.updateVersion()    
+    self.updateVersion()    
 
-    def load(self):
-        if os.path.exists(self.filename):
-            with open(self.filename, 'rb') as filehandle:            
-                data = pickle.load(filehandle)
-                self.products = data['products']
-                self.people = data['people']
-                self.timeslots = data['timeslots']
-                self.bookings = data['bookings']
+  def load(self):
+    if os.path.exists(self.filename):
+      with open(self.filename, 'rb') as filehandle:            
+        data = pickle.load(filehandle)
+        self.products = data['products']
+        self.people = data['people']
+        self.timeslots = data['timeslots']
+        self.bookings = data['bookings']
 
-    def save(self):
-        data = {}
-        data['products'] = self.products
-        data['people'] = self.people
-        data['timeslots'] = self.timeslots
-        data['bookings'] = self.bookings
+  def save(self):
+    data = {}
+    data['products'] = self.products
+    data['people'] = self.people
+    data['timeslots'] = self.timeslots
+    data['bookings'] = self.bookings
 
-        with open(self.filename, 'wb') as filehandle:            
-            pickle.dump(data, filehandle)
+    with open(self.filename, 'wb') as filehandle:            
+      pickle.dump(data, filehandle)
 
-    def getBooking(self, product, timeslot):
-        booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
-        if booking:
-          return next((person for person in self.people if person.email_address == booking.email_address), None)
+  def setProducts(self, products):
+    self.products.clear()
 
-        return None
+    for productName in products:
+      product = Product()
+      product.name = productName
+      self.products.append(product)
+    
+    self.updateVersion()
 
-    def setBooking(self, product, timeslot, email_address):
-        booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
-        if booking:
-            self.bookings.remove(booking)
+  def setTimeslots(self, timeslots):
+    self.timeslots.clear()
 
-        booking = Booking()
-        booking.product = product
-        booking.timeslot = timeslot
-        booking.email_address = email_address
-        self.bookings.append(booking)
+    for timeslotTime in timeslots:
+      timeslot = Timeslot(timeslotTime)
+      self.timeslots.append(timeslot)
+    
+    self.updateVersion()
 
-        self.save()
+  def getBooking(self, product, timeslot):
+    booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
+    if booking:
+      return next((person for person in self.people if person.email_address == booking.email_address), None)
 
-    def setProducts(self, products):
-      self.products.clear()
+    return None
 
-      for productName in products:
-        product = Product()
-        product.name = productName
-        self.products.append(product)
-      
-      self.updateVersion()
+  def setBooking(self, product, timeslot, email_address):
+    booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
+    if booking:
+        self.bookings.remove(booking)
 
-    def updateVersion(self):
-      self.version += 1
-      self.save()
+    booking = Booking()
+    booking.product = product
+    booking.timeslot = timeslot
+    booking.email_address = email_address
+    self.bookings.append(booking)
 
-    def hasUpdated(self, version):
-      return self.version > version
+    self.save()    
 
-    def defaultProducts(self):
-        if len(self.products) == 0:        
-            product = Product()
-            product.name = 'Hitman XS'
-            self.products.append(product)
+  def updateVersion(self):
+    self.version += 1
+    self.save()
 
-            product = Product()
-            product.name = 'Hitman S'
-            self.products.append(product)
+  def hasUpdated(self, version):
+    return self.version > version
 
-            product = Product()
-            product.name = 'Hitman M'
-            self.products.append(product)
+  def addPerson(self, name, emailAddress, mobileNumber):
+    person = Person()
+    person.name = name
+    person.email_address = emailAddress
+    person.mobile_number = mobileNumber
+    self.people.append(person)
 
-            product = Product()
-            product.name = 'Hitman L'
-            self.products.append(product)              
+  def defaultProducts(self):
+    if len(self.products) == 0:        
+      product = Product()
+      product.name = 'Hitman XS'
+      self.products.append(product)
 
-    def defaultPeople(self):
-        if len(self.people) == 0: 
-            person = Person()
-            person.name = 'Stacey Verner'
-            person.nick_name = 'Stacey V'
-            person.email_address = 'stacey@verner.co.nz'
-            person.mobile_number = '021 074 7965'        
-            self.people.append(person)
+      product = Product()
+      product.name = 'Hitman S'
+      self.products.append(product)
 
-            person = Person()
-            person.name = 'Anna Verner'
-            person.nick_name = 'Anna V'
-            person.email_address = 'anna@verner.co.nz'
-            person.mobile_number = '021 298 4390'        
-            self.people.append(person)
+      product = Product()
+      product.name = 'Hitman M'
+      self.products.append(product)
 
-    def defaultTimeslots(self):
-        if len(self.timeslots) == 0:                         
-            self.timeslots.append(Timeslot('08:00'))
-            self.timeslots.append(Timeslot('08:30'))
-            self.timeslots.append(Timeslot('09:00'))
-            self.timeslots.append(Timeslot('09:30'))
-            self.timeslots.append(Timeslot('10:00'))
-            self.timeslots.append(Timeslot('10:30'))
-            self.timeslots.append(Timeslot('11:00'))
-            self.timeslots.append(Timeslot('11:30'))
-            self.timeslots.append(Timeslot('12:00'))
-            self.timeslots.append(Timeslot('12:30'))
-            self.timeslots.append(Timeslot('13:00'))
-            self.timeslots.append(Timeslot('13:30'))
-            self.timeslots.append(Timeslot('14:00'))
-            self.timeslots.append(Timeslot('14:30'))
-            self.timeslots.append(Timeslot('15:00'))
-            self.timeslots.append(Timeslot('15:30'))
-            self.timeslots.append(Timeslot('16:00'))
-            self.timeslots.append(Timeslot('16:30'))
+      product = Product()
+      product.name = 'Hitman L'
+      self.products.append(product)              
 
-    def defaultBookings(self):
-        if len(self.bookings) == 0:
-            booking = Booking()
-            booking.product = 'Hitman S'
-            booking.timeslot = '08:00'
-            booking.email_address = 'anna@verner.co.nz'
-            self.bookings.append(booking)        
+  def defaultPeople(self):
+    if len(self.people) == 0: 
+      self.addPerson('Stacey Verner', 'stacey@verner.co.nz', '021 074 7965')
+      self.addPerson('Anna Verner', 'anna@verner.co.nz', '021 298 4390')
+
+  def defaultTimeslots(self):
+    if len(self.timeslots) == 0:                         
+      self.timeslots.append(Timeslot('08:00'))
+      self.timeslots.append(Timeslot('08:30'))
+      self.timeslots.append(Timeslot('09:00'))
+      self.timeslots.append(Timeslot('09:30'))
+      self.timeslots.append(Timeslot('10:00'))
+      self.timeslots.append(Timeslot('10:30'))
+      self.timeslots.append(Timeslot('11:00'))
+      self.timeslots.append(Timeslot('11:30'))
+      self.timeslots.append(Timeslot('12:00'))
+      self.timeslots.append(Timeslot('12:30'))
+      self.timeslots.append(Timeslot('13:00'))
+      self.timeslots.append(Timeslot('13:30'))
+      self.timeslots.append(Timeslot('14:00'))
+      self.timeslots.append(Timeslot('14:30'))
+      self.timeslots.append(Timeslot('15:00'))
+      self.timeslots.append(Timeslot('15:30'))
+      self.timeslots.append(Timeslot('16:00'))
+      self.timeslots.append(Timeslot('16:30'))
+
+  def defaultBookings(self):
+    if len(self.bookings) == 0:
+      booking = Booking()
+      booking.product = 'Hitman S'
+      booking.timeslot = '08:00'
+      booking.email_address = 'anna@verner.co.nz'
+      self.bookings.append(booking)        
