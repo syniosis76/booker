@@ -10,6 +10,7 @@ from views.bookingListView import BookingListView
 from views.peopleListView import PeopleListView
 from views.productView import ProductView
 from views.timeslotView import TimeslotView
+from views.peopleView import PeopleView
 
 class BookerApp(App):    
     def build(self):
@@ -20,6 +21,7 @@ class BookerApp(App):
         self.screenManager.add_widget(PeopleListView(name='people')) 
         self.screenManager.add_widget(ProductView(name='products')) 
         self.screenManager.add_widget(TimeslotView(name='timeslots'))
+        self.screenManager.add_widget(PeopleView(name='people-list'))
 
         return self.screenManager
 

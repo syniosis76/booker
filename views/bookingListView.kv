@@ -6,14 +6,22 @@
 		Carousel:
 			id: bookings
 	GridLayout:
-		cols: 7
-		size_hint_y: 0.075
+		cols: 4
+		size_hint_y: 0.075		
+		GridLayout:
+			size_hint_x: 9.0
 		Button:
-			text: 'Products'
+			text: 'P'
+			background_color: [0.5, 0.5, 0.5, 1.0]
 			on_press: root.productsButtonClick(self)
 		Button:
-			text: 'Times'
+			text: 'T'
+			background_color: [0.5, 0.5, 0.5, 1.0]
 			on_press: root.timeslotsButtonClick(self)
+		Button:
+			text: 'P'
+			background_color: [0.5, 0.5, 0.5, 1.0]
+			on_press: root.peopleButtonClick(self)
 				
 				
 				

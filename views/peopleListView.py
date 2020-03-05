@@ -11,6 +11,9 @@ from kivy.uix.popup import Popup
 
 Builder.load_file('views/peopleListView.kv')
 
+def sizeCallback(obj, value):
+    obj.text_size = (value[0] - 10, 20)
+
 class PeopleListView(Screen):
     def __init__(self, **kwargs):
         super(PeopleListView, self).__init__(**kwargs)   
@@ -29,6 +32,7 @@ class PeopleListView(Screen):
         sortedPeople = sorted(app.data.people, key=lambda person: person.name)
         for person in sortedPeople:
             button = Button()
+            button.background_color = [0.0, 0.435, 0.698, 1.0]
             button.text = person.name
             button.booker_email_address = person.email_address
             button.bind(on_press=self.personButtonClick)
@@ -54,29 +58,63 @@ class PeopleListView(Screen):
         nameInput = TextInput()
         emailInput = TextInput()
         mobileInput = TextInput()
-        addButton = Button(text='Add')
+        addButton = Button(text='Add', background_color = [0.0, 0.435, 0.698, 1.0])
         addButton.bind(on_press=self.popupButtonClick)
-        cancelButton = Button(text='Cancel')
+        cancelButton = Button(text='Cancel', background_color = [0.0, 0.435, 0.698, 1.0])
         cancelButton.bind(on_press=self.popupButtonClick)
 
         content = GridLayout()
-        content.cols = 2        
-        content.add_widget(Label(text = 'Name'))
-        content.add_widget(nameInput)
-        content.add_widget(Label(text = 'Email'))
-        content.add_widget(emailInput)
-        content.add_widget(Label(text = 'Mobile'))
-        content.add_widget(mobileInput)
-        content.add_widget(addButton)
-        content.add_widget(cancelButton)        
+        content.cols = 1
+
+        formGrid = GridLayout()
+        formGrid.cols = 1
+
+        formGrid.row_default_height = 30
+        formGrid.row_force_default = True
+        
+        label = Label(text = 'Name')
+        label.bind(size = sizeCallback)
+        formGrid.add_widget(label)
+
+        formGrid.add_widget(nameInput)
+        
+        label = Label(text = 'Email')
+        label.bind(size = sizeCallback)
+        formGrid.add_widget(label)
+
+        formGrid.add_widget(emailInput)
+
+        label = Label(text = 'Mobile')
+        label.bind(size = sizeCallback)
+        formGrid.add_widget(label)
+
+        formGrid.add_widget(mobileInput)        
+
+        buttonGrid = GridLayout()
+        buttonGrid.cols = 2
+        buttonGrid.size_hint_y = 0.2
+
+        buttonGrid.add_widget(addButton)
+        buttonGrid.add_widget(cancelButton) 
+
+        content.add_widget(formGrid)
+        content.add_widget(GridLayout()) # Spacer
+        content.add_widget(buttonGrid)      
 
         self.popup = Popup(content=content, auto_dismiss=False)
+        self.popup.title = 'Add Person'
+        self.popup.size_hint = (0.8, 0.8)
         self.popup.nameInput = nameInput
         self.popup.emailInput = emailInput
         self.popup.mobileInput = mobileInput
 
         # open the popup
         self.popup.open()
+
+    def clearButtonClick(self, instance):
+        print('People button <%s> clicked.' % instance.text)        
+
+        self.selectPerson(None)
 
     def cancelButtonClick(self, instance):
         print('People button <%s> clicked.' % instance.text)        

@@ -135,3 +135,7 @@ class BookingListView(Screen):
         self.manager.transition.direction = 'left'
         self.manager.current = 'timeslots'
     
+    def peopleButtonClick(self, instance):
+        print('Booking button <%s> clicked.' % instance.text)
+        self.manager.transition.direction = 'left'
+        self.manager.current = 'people-list'

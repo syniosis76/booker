@@ -22,11 +22,7 @@ class Data():
     self.loadData()     
 
   def loadData(self):
-    self.load()                    
-    self.defaultProducts()
-    self.defaultPeople()            
-    self.defaultTimeslots()
-    self.defaultBookings()    
+    self.load()
 
     self.updateVersion()    
 
@@ -68,6 +64,9 @@ class Data():
     
     self.updateVersion()
 
+  def setPeople(self, people):    
+    pass
+
   def getBooking(self, product, timeslot):
     booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
     if booking:
@@ -78,13 +77,14 @@ class Data():
   def setBooking(self, product, timeslot, email_address):
     booking = next((booking for booking in self.bookings if booking.product == product and booking.timeslot == timeslot), None)
     if booking:
-        self.bookings.remove(booking)
+      self.bookings.remove(booking)
 
-    booking = Booking()
-    booking.product = product
-    booking.timeslot = timeslot
-    booking.email_address = email_address
-    self.bookings.append(booking)
+    if email_address:
+      booking = Booking()
+      booking.product = product
+      booking.timeslot = timeslot
+      booking.email_address = email_address
+      self.bookings.append(booking)
 
     self.save()    
 
@@ -118,38 +118,4 @@ class Data():
 
       product = Product()
       product.name = 'Hitman L'
-      self.products.append(product)              
-
-  def defaultPeople(self):
-    if len(self.people) == 0: 
-      self.addPerson('Stacey Verner', 'stacey@verner.co.nz', '021 074 7965')
-      self.addPerson('Anna Verner', 'anna@verner.co.nz', '021 298 4390')
-
-  def defaultTimeslots(self):
-    if len(self.timeslots) == 0:                         
-      self.timeslots.append(Timeslot('08:00'))
-      self.timeslots.append(Timeslot('08:30'))
-      self.timeslots.append(Timeslot('09:00'))
-      self.timeslots.append(Timeslot('09:30'))
-      self.timeslots.append(Timeslot('10:00'))
-      self.timeslots.append(Timeslot('10:30'))
-      self.timeslots.append(Timeslot('11:00'))
-      self.timeslots.append(Timeslot('11:30'))
-      self.timeslots.append(Timeslot('12:00'))
-      self.timeslots.append(Timeslot('12:30'))
-      self.timeslots.append(Timeslot('13:00'))
-      self.timeslots.append(Timeslot('13:30'))
-      self.timeslots.append(Timeslot('14:00'))
-      self.timeslots.append(Timeslot('14:30'))
-      self.timeslots.append(Timeslot('15:00'))
-      self.timeslots.append(Timeslot('15:30'))
-      self.timeslots.append(Timeslot('16:00'))
-      self.timeslots.append(Timeslot('16:30'))
-
-  def defaultBookings(self):
-    if len(self.bookings) == 0:
-      booking = Booking()
-      booking.product = 'Hitman S'
-      booking.timeslot = '08:00'
-      booking.email_address = 'anna@verner.co.nz'
-      self.bookings.append(booking)        
+      self.products.append(product)      
