@@ -16,17 +16,19 @@ class BookingListView(Screen):
     def __init__(self, **kwargs):        
         super(BookingListView, self).__init__(**kwargs)                   
         self.version = 0
+        self.buttons = []
 
     def on_pre_enter(self):
         app = App.get_running_app()
         if app.data.hasUpdated(self.version):
             self.buildUi()
-        self.listBookings(self.ids.bookings)
+        self.listBookings(self.ids.bookings, '')
         self.updateVersion = app.data.version  
 
     def buildUi(self):
         bookings = self.ids.bookings
-        bookings.clear_widgets()        
+        bookings.clear_widgets()
+        self.buttons.clear()        
 
         app = App.get_running_app()
 
@@ -34,6 +36,7 @@ class BookingListView(Screen):
         
         for productIndex in range(len(app.data.products)):
             product = app.data.products[productIndex]
+            print(product.name)
             
             grid = GridLayout()
             grid.cols = 1
@@ -42,7 +45,7 @@ class BookingListView(Screen):
             headerGrid.cols = 3
             headerGrid.size_hint_y=0.1
 
-            button = Button()
+            button = Button()            
             button.background_normal = ''
             button.background_color = [0, 0, 0, 1]
             button.bind(on_press=self.previousButtonClick)
@@ -76,6 +79,7 @@ class BookingListView(Screen):
 
             for timeslot in app.data.timeslots:                       
                 button = Button()
+                self.buttons.append(button)
                 button.booker_product = product.name
                 button.booker_timeslot = timeslot.time
                 button.text = timeslot.time                
@@ -93,21 +97,18 @@ class BookingListView(Screen):
 
         self.version = app.data.version          
 
-    def listBookings(self, widgets):
+    def listBookings(self, widgets, prefix):
         app = App.get_running_app()
         
-        for widget in widgets.children:
-            if isinstance(widget, Button) and hasattr(widget, 'booker_product'):
-                person = app.data.getBooking(widget.booker_product, widget.booker_timeslot)
-                if person:
-                    widget.text = widget.booker_timeslot + '    [b]' + person.name + '[/b]'
-                    widget.background_color = [0.137, 0.658, 0.949, 1.0]
-                else:
-                    widget.text = widget.booker_timeslot
-                    widget.background_color = [0.0, 0.435, 0.698, 1.0]
+        for button in self.buttons:
+            person = app.data.getBooking(button.booker_product, button.booker_timeslot)
+            if person:
+                button.text = button.booker_timeslot + '    [b]' + person.name + '[/b]'
+                button.background_color = [0.137, 0.658, 0.949, 1.0]
             else:
-                self.listBookings(widget)
-
+                button.text = button.booker_timeslot
+                button.background_color = [0.0, 0.435, 0.698, 1.0]
+                      
     def buttonClick(self, instance):
         print('Booking button <%s> clicked.' % instance.text)
         app = App.get_running_app()
