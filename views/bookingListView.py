@@ -6,11 +6,12 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+from kivy.metrics import sp
 
 Builder.load_file('views/bookingListView.kv')
 
 def sizeCallback(obj, value):
-    obj.text_size = (value[0] - 30, 20)
+    obj.text_size = (value[0] - sp(30), sp(20))
 
 class BookingListView(Screen):
     def __init__(self, **kwargs):        
@@ -32,7 +33,7 @@ class BookingListView(Screen):
 
         app = App.get_running_app()
 
-        rowHeight = 40
+        rowHeight = sp(40)
         
         for productIndex in range(len(app.data.products)):
             product = app.data.products[productIndex]
@@ -55,7 +56,7 @@ class BookingListView(Screen):
 
             label = Label()
             label.text = product.name            
-            label.font_size = 24
+            label.font_size = sp(24)
             label.bold = True
             headerGrid.add_widget(label)
 

@@ -8,11 +8,12 @@ from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
+from kivy.metrics import sp
 
 Builder.load_file('views/peopleListView.kv')
 
 def sizeCallback(obj, value):
-    obj.text_size = (value[0] - 10, 20)
+    obj.text_size = (value[0] - sp(30), sp(20))
 
 class PeopleListView(Screen):
     def __init__(self, **kwargs):
@@ -33,8 +34,10 @@ class PeopleListView(Screen):
         for person in sortedPeople:
             button = Button()
             button.background_color = [0.0, 0.435, 0.698, 1.0]
-            button.text = person.name
+            button.markup = True
+            button.text = '[b]' + person.name + '[/b]'
             button.booker_email_address = person.email_address
+            button.bind(size = sizeCallback)
             button.bind(on_press=self.personButtonClick)
             people.add_widget(button)
 
