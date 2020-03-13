@@ -72,7 +72,7 @@ class PeopleListView(Screen):
         formGrid = GridLayout()
         formGrid.cols = 1
 
-        formGrid.row_default_height = 30
+        formGrid.row_default_height = sp(30)
         formGrid.row_force_default = True
         
         label = Label(text = 'Name')
